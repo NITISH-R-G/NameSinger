@@ -39,3 +39,68 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# --- Security hardening (Checkpoint 1.1) ---
+# Environment files: never commit real values. Only the placeholder example is allowed.
+.env
+.env.*
+!.env.example
+
+# Secrets, keys and signing credentials
+*.keystore
+*.jks
+*.p8
+*.p12
+*.pfx
+*.key
+*.pem
+*.mobileprovision
+*.cer
+*.crt
+credentials.json
+credentials/
+secrets/
+*.secret
+*.secrets
+service-account*.json
+google-services.json
+GoogleService-Info.plist
+.npmrc
+.netrc
+
+# Local build artifacts and generated output
+*.apk
+*.aab
+*.ipa
+*.app
+*.dSYM/
+/build
+.gradle/
+local.properties
+.eas/
+coverage/
+*.log
+
+# Generated native projects (Expo prebuild) and Windows build output
+/android
+/ios
+/.native-build
+
+# Python bytecode from the development scripts
+__pycache__/
+*.pyc
+
+# --- Added for the GitHub milestone ---
+# Research workspace: venvs, upstream clones, model outputs and audio live outside source control
+/research/
+# Models and generated audio never go in git
+*.gguf
+*.safetensors
+*.mp3
+songs/
+
+
+# Native module build output
+**/android/build/
+**/.cxx/
+
