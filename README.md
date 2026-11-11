@@ -5,12 +5,12 @@
 <h3 align="center">Type a name. Your phone sings it.</h3>
 
 <p align="center">
-  <a href="https://github.com/NITISH-R-G/NameSinger/releases/download/v0.1.0/NameSinger-v0.1.0-debug-arm64.apk">
+  <a href="https://github.com/NITISH-R-G/NameSinger/releases/download/v0.2.0/NameSinger-v0.2.0-debug-arm64.apk">
     <img src="docs/assets/download-apk.svg" alt="Download APK" width="300">
   </a>
   <br>
-  <sub><b>v0.1.0 prototype</b> · debug build, not a Play Store release · arm64 · 51 MB · tested on Android 16 ·
-  <a href="https://github.com/NITISH-R-G/NameSinger/releases/tag/v0.1.0">release notes and checksum</a></sub>
+  <sub><b>v0.2.0 prototype</b> · debug build, not a Play Store release · arm64 · 51 MB · tested on Android 16 ·
+  <a href="https://github.com/NITISH-R-G/NameSinger/releases/tag/v0.2.0">release notes and checksum</a></sub>
 </p>
 
 ---
