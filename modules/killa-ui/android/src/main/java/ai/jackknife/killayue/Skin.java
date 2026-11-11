@@ -42,7 +42,7 @@ public class Skin {
             action = bitmap(c, "btnA");
             nav = bitmap(c, "btnB");
             staff = bitmap(c, "staff");
-            dial = withoutLettering(bitmap(c, "dial"));
+            dial = bitmap(c, "dial");
             round = bitmap(c, "round");
             for (int i = 0; i < notes.length; i++) notes[i] = bitmap(c, "note" + (i + 1));
             script = Typeface.createFromAsset(c.getAssets(), "fonts/KillaGel-BoldScript.ttf");
@@ -69,44 +69,6 @@ public class Skin {
     }
 
 
-    /**
-     * NameSinger: Killa's record artwork has the Killa YuE lettering over the whole vinyl face. This paints a fresh vinyl face
-     * (grooves and a sheen) and a plain gold centre label over it, inside the inner gold ring, and leaves the gold rims as they are.
-     */
-    private static Bitmap withoutLettering(Bitmap src) {
-        Bitmap b = src.copy(Bitmap.Config.ARGB_8888, true);
-        Canvas c = new Canvas(b);
-        float cx = b.getWidth() / 2f, cy = b.getHeight() / 2f, k = b.getWidth() / 380f;
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-        float face = 142 * k;
-        p.setShader(new android.graphics.RadialGradient(cx, cy, face, new int[] {0xFF151515, 0xFF0B0B0B, 0xFF050505},
-                new float[] {0f, 0.7f, 1f}, android.graphics.Shader.TileMode.CLAMP));
-        c.drawCircle(cx, cy, face, p);
-        p.setShader(null);
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(Math.max(1f, 1.1f * k));
-        int n = 0;
-        for (float r = 54 * k; r < face - 2 * k; r += 4.5f * k, n++) {
-            p.setColor((n % 3 == 0) ? 0x2CFFFFFF : 0x12FFFFFF);
-            c.drawCircle(cx, cy, r, p);
-        }
-        p.setStyle(Paint.Style.FILL);
-        p.setShader(new android.graphics.SweepGradient(cx, cy, new int[] {0x00FFFFFF, 0x2EFFFFFF, 0x00FFFFFF, 0x00FFFFFF, 0x2EFFFFFF, 0x00FFFFFF},
-                new float[] {0f, 0.07f, 0.15f, 0.5f, 0.57f, 0.65f}));
-        c.drawCircle(cx, cy, face, p);
-        p.setShader(new android.graphics.RadialGradient(cx - 10 * k, cy - 12 * k, 62 * k, new int[] {HI, ACCENT, LO},
-                new float[] {0f, 0.55f, 1f}, android.graphics.Shader.TileMode.CLAMP));
-        c.drawCircle(cx, cy, 46 * k, p);
-        p.setShader(null);
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(2 * k);
-        p.setColor(LO);
-        c.drawCircle(cx, cy, 46 * k, p);
-        p.setStyle(Paint.Style.FILL);
-        p.setColor(0xFF050505);
-        c.drawCircle(cx, cy, 6 * k, p);
-        return b;
-    }
     private static Bitmap bitmap(Context c, String name) throws Exception {
         InputStream in = c.getAssets().open("skins/gold/" + name + ".png");
         try {

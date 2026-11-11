@@ -153,6 +153,7 @@ describe('interactive elements in source', () => {
       'components/glass/GlassBottomSheet.tsx',
       'components/glass/GlassIconButton.tsx',
       'components/glass/GlassThemeSelector.tsx',
+      'killa/IconButton.tsx',
     ]);
     // Every one of them names itself for a screen reader.
     for (const file of withPressable) {

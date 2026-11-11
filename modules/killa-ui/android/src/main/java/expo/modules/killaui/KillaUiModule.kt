@@ -1,7 +1,6 @@
 package expo.modules.killaui
 
-import ai.jackknife.killayue.Deck
-import ai.jackknife.killayue.RecordSpin
+import ai.jackknife.killayue.Vinyl
 import ai.jackknife.killayue.Skin
 import ai.jackknife.killayue.StaffProgress
 import ai.jackknife.killayue.Ui
@@ -54,14 +53,12 @@ class KillaUiModule : Module() {
     }
 
     View(KillaRecordView::class) {
-      Prop("spinning") { view: KillaRecordView, v: Boolean -> view.record.setSpinning(v) }
+      // degrees per second: 0 stops the record (it eases to a stop), 200 is a 33 rpm record
+      Prop("speed") { view: KillaRecordView, v: Double -> view.record.setSpeed(v.toFloat()) }
     }
 
-    View(KillaDeckView::class) {
-      Prop("source") { view: KillaDeckView, v: String? -> view.setSong(v) }
-      Prop("title") { view: KillaDeckView, v: String -> view.deck.setTitle(v) }
-      AsyncFunction("replay") { view: KillaDeckView -> view.deck.replay() }
-    }
+    // The real amplitude shape of an audio file, as `bars` values from 0 to 1, for the playback timeline.
+    AsyncFunction("waveform") { path: String, bars: Int -> Waveform.peaks(path, bars) }
   }
 }
 
@@ -208,34 +205,15 @@ class KillaStaffView(context: Context, appContext: AppContext) : ExpoView(contex
 }
 
 class KillaRecordView(context: Context, appContext: AppContext) : ExpoView(context, appContext) {
-  val record: RecordSpin
+  val record: Vinyl
 
   init {
     Skin.load(context)
-    record = RecordSpin(context)
+    record = Vinyl(context)
     addView(record, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
   }
 
   override val shouldUseAndroidLayout = true
-}
-
-class KillaDeckView(context: Context, appContext: AppContext) : ExpoView(context, appContext) {
-  val deck: Deck
-  private var current: String? = null
-
-  init {
-    Skin.load(context)
-    deck = Deck(context, 1.5f) // the player is the focus of the finished-song screen, so Killa's deck is drawn 1.5x
-    addView(deck, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-  }
-
-  override val shouldUseAndroidLayout = true
-
-  fun setSong(path: String?) {
-    if (path == current) return
-    current = path
-    deck.setSource(path, true)
-  }
 }
 
 /** One rounded group of options with the chosen one filled (Killa pill, see Ui.chip), so a choice reads as one control. */
