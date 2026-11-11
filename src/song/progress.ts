@@ -1,58 +1,52 @@
-/** Turns the engine's own log lines into a stage, a fraction and a readable status. Pure, no I/O. */
+/**
+ * Turns the engine's own log lines into honest stage information. Pure, no I/O.
+ *
+ * There is deliberately no overall percentage: only the voice-render stage reports a real count ("step 2 of 4").
+ * The other stages are named, never given an invented fraction.
+ */
 
 export interface SongProgress {
   stage: 'starting' | 'loading' | 'score' | 'melody' | 'rendering' | 'decoding' | 'saving';
-  /** 0..1 across the whole song. */
-  fraction: number;
-  text: string;
+  /** Which of the four steps is running: 0 before the first, then 1 to 4. Only moves forward. */
+  step: 0 | 1 | 2 | 3 | 4;
+  title: string;
+  /** A real count from the engine, when there is one. */
+  detail: string | null;
 }
 
-// Share of the whole job each stage is given in the progress bar (the stage order is fixed).
-const W = { load: 0.04, score: 0.06, sem: 0.4, nar: 0.4, vae: 0.08, mp3: 0.02 };
+export const STEP_COUNT = 4;
 
 const P_SCORE = /\[AR\] Score (\d+)\/(\d+)/;
 const P_SEM = /\[AR\] Semantic (\d+)\/(\d+)/;
 const P_NAR = /\[NAR\] Step (\d+)\/(\d+)/;
+
+export const START_PROGRESS: SongProgress = { stage: 'starting', step: 0, title: 'Getting ready', detail: null };
 
 /** Looks at the newest lines first and reports the most advanced stage it can see. */
 export function parseProgress(lines: readonly string[]): SongProgress {
   for (let i = lines.length - 1; i >= 0; i -= 1) {
     const line = lines[i];
     if (line.includes('[MP3]') || line.includes('[WAV]')) {
-      return { stage: 'saving', fraction: 1 - W.mp3 / 2, text: 'Finishing your song' };
+      return { stage: 'saving', step: 4, title: 'Finishing the audio', detail: null };
     }
     if (line.includes('[VAE]')) {
-      return { stage: 'decoding', fraction: W.load + W.score + W.sem + W.nar + W.vae / 2, text: 'Turning it into sound' };
+      return { stage: 'decoding', step: 4, title: 'Finishing the audio', detail: null };
     }
     const nar = P_NAR.exec(line);
     if (nar) {
-      const done = Number(nar[1]);
       const total = Math.max(1, Number(nar[2]));
-      return {
-        stage: 'rendering',
-        fraction: W.load + W.score + W.sem + (W.nar * Math.min(done, total)) / total,
-        text: `Rendering the voice, step ${Math.min(done, total)} of ${total}`,
-      };
+      const done = Math.min(Number(nar[1]), total);
+      return { stage: 'rendering', step: 3, title: 'Rendering the voice', detail: `Render pass ${done} of ${total}` };
     }
-    const sem = P_SEM.exec(line);
-    if (sem) {
-      const done = Number(sem[1]);
-      const total = Math.max(1, Number(sem[2]));
-      return {
-        stage: 'melody',
-        fraction: W.load + W.score + (W.sem * Math.min(done, total)) / total,
-        text: 'Singing the melody',
-      };
+    if (P_SEM.test(line)) {
+      return { stage: 'melody', step: 2, title: 'Singing the melody', detail: null };
     }
-    const score = P_SCORE.exec(line);
-    if (score) {
-      const done = Number(score[1]);
-      const total = Math.max(1, Number(score[2]));
-      return { stage: 'score', fraction: W.load + (W.score * Math.min(done, total)) / total, text: 'Reading the score' };
+    if (P_SCORE.test(line)) {
+      return { stage: 'score', step: 1, title: 'Reading the score', detail: null };
     }
     if (line.includes('[Store] Load') || line.includes('[Load]')) {
-      return { stage: 'loading', fraction: W.load / 2, text: 'Waking the singer' };
+      return { stage: 'loading', step: 1, title: 'Waking the singer', detail: null };
     }
   }
-  return { stage: 'starting', fraction: 0, text: 'Getting ready' };
+  return START_PROGRESS;
 }

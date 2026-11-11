@@ -8,10 +8,17 @@ export interface KillaButtonProps {
   style?: StyleProp<ViewStyle>;
   label: string;
   /** primary: the big script plate. plate: the quieter plate. tab: a tab-row plate. chip: Killa's pill chip, selectable. */
-  variant: 'primary' | 'plate' | 'tab' | 'chip';
+  variant: 'primary' | 'plate' | 'link' | 'tab' | 'chip';
   selected?: boolean;
   disabled?: boolean;
   onPress?: (e: PressEvent) => void;
+}
+
+export interface KillaSegmentedProps {
+  style?: StyleProp<ViewStyle>;
+  options: string[];
+  selectedIndex: number;
+  onSelect?: (e: { nativeEvent: { index: number } }) => void;
 }
 
 export interface KillaFieldProps {
@@ -48,6 +55,7 @@ export interface KillaDeckHandle {
 }
 
 export const KillaButton = requireNativeView<KillaButtonProps>('KillaUi', 'KillaButtonView');
+export const KillaSegmented = requireNativeView<KillaSegmentedProps>('KillaUi', 'KillaSegmentedView');
 export const KillaField = requireNativeView<KillaFieldProps>('KillaUi', 'KillaFieldView');
 export const KillaStaff = requireNativeView<KillaStaffProps>('KillaUi', 'KillaStaffView');
 export const KillaRecord = requireNativeView<KillaRecordProps>('KillaUi', 'KillaRecordView');

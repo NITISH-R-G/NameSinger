@@ -15,12 +15,12 @@ import android.view.View;
 /**
  * The progress bar: a gold-framed music staff with cast-gold notes drifting along it.
  * The amber playhead always travels left to right: notes behind it are lit and trail
- * sparks, notes ahead of it are ghosts.
+ * sparks, notes ahead of it are ghosts. (NameSinger changes: lap time, staff height, ghost-note opacity.)
  */
 public class StaffProgress extends View {
     // a little rising and falling phrase, in staff steps above the bottom line
     private static final int[] MELODY = {2, 4, 6, 5, 7, 5, 3, 4, 1, 3, 5};
-    private static final long LAP_MS = 11000;
+    private static final long LAP_MS = 16000; // NameSinger: slower lap (Killa: 11000) so each note is readable
 
     private final Paint bmp = new Paint(Paint.FILTER_BITMAP_FLAG | Paint.ANTI_ALIAS_FLAG);
     private final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -28,7 +28,7 @@ public class StaffProgress extends View {
     private int max = 100, progress;
     private float shown; // eased fraction actually drawn
 
-    private int heightDp = 72;
+    private int heightDp = 96; // NameSinger: taller staff (Killa: 72)
 
     public StaffProgress(Context c) {
         super(c);
@@ -124,7 +124,7 @@ public class StaffProgress extends View {
             float y = bottom - MELODY[i] * half + bob;
             boolean lit = x <= head;
             float edge = (float) Math.min(1.0, Math.min(u, 1 - u) / 0.07);
-            int alpha = (int) ((lit ? 70 + 185 * fade : 70) * edge);
+            int alpha = (int) ((lit ? 70 + 185 * fade : 140) * edge); // NameSinger: ghost notes brighter (Killa: 70)
             Bitmap note = Skin.note(i);
             if (note == null) continue;
             float noteW = noteH * note.getWidth() / note.getHeight();

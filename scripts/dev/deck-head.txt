@@ -41,10 +41,10 @@ public class Deck extends View {
     private boolean ended;
     private String playTitle = "";
 
-    public Deck(Context c) {
+    public Deck(Context c, float scale) {
         super(c);
         Skin.load(c);
-        dp = getResources().getDisplayMetrics().density;
+        dp = getResources().getDisplayMetrics().density * scale; // NameSinger: the whole deck can be drawn larger
         setContentDescription("Music player");
     }
 
@@ -110,7 +110,7 @@ public class Deck extends View {
 
     @Override
     protected void onMeasure(int w, int h) {
-        setMeasuredDimension(MeasureSpec.getSize(w), (int) (132 * dp));
+        setMeasuredDimension(MeasureSpec.getSize(w), (int) (132 * dp)); // scales with the deck
     }
 
     private boolean playing() {

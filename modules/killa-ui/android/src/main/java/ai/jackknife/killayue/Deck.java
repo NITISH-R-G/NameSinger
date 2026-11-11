@@ -41,10 +41,10 @@ public class Deck extends View {
     private boolean ended;
     private String playTitle = "";
 
-    public Deck(Context c) {
+    public Deck(Context c, float scale) {
         super(c);
         Skin.load(c);
-        dp = getResources().getDisplayMetrics().density;
+        dp = getResources().getDisplayMetrics().density * scale; // NameSinger: the whole deck can be drawn larger
         setContentDescription("Music player");
     }
 
@@ -110,7 +110,7 @@ public class Deck extends View {
 
     @Override
     protected void onMeasure(int w, int h) {
-        setMeasuredDimension(MeasureSpec.getSize(w), (int) (132 * dp));
+        setMeasuredDimension(MeasureSpec.getSize(w), (int) (132 * dp)); // scales with the deck
     }
 
     private boolean playing() {
@@ -221,19 +221,7 @@ public class Deck extends View {
             c.restore();
         }
 
-        // level bars on the right; they follow a made-up pulse, not the audio itself
-        float barsW = 62 * dp, barsL = w - 20 * dp - barsW, barsB = ry + 15 * dp, barsH = 30 * dp;
-        float bw = barsW / BARS;
-        for (int i = 0; i < BARS; i++) {
-            double t = now / 1000.0;
-            double v = 0.5 + 0.5 * Math.sin(t * (5.1 + i * 0.83) + i * 1.7);
-            v *= 0.55 + 0.45 * Math.sin(t * 1.9 + i * 0.6);
-            float h = 2.5f * dp + (float) Math.abs(v) * barsH * energy;
-            float x = barsL + i * bw;
-            p.setShader(new LinearGradient(0, barsB - h, 0, barsB, Skin.HI, Skin.LO, Shader.TileMode.CLAMP));
-            c.drawRoundRect(new RectF(x + bw * 0.18f, barsB - h, x + bw * 0.82f, barsB), bw * 0.3f, bw * 0.3f, p);
-        }
-        p.setShader(null);
+        float barsL = w - 20 * dp; // the original's decorative level bars were removed
 
         // title and time
         float tx = rx + rr + 12 * dp, tMax = barsL - tx - 10 * dp;

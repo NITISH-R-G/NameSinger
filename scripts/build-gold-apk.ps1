@@ -29,7 +29,7 @@ try {
 $out = Join-Path $project (Join-Path '.native-build' $OutName)
 New-Item -ItemType Directory -Force $out | Out-Null
 $apk = Get-ChildItem (Join-Path $Mirror 'android\app\build\outputs\apk\debug') -Filter *.apk | Select-Object -First 1
-Copy-Item $apk.FullName (Join-Path $out 'NameSinger-killa-debug-arm64.apk') -Force
-$h = (Get-FileHash (Join-Path $out 'NameSinger-killa-debug-arm64.apk') -Algorithm SHA256).Hash
-Write-Host "== done: $out\NameSinger-killa-debug-arm64.apk sha256=$h"
+Copy-Item $apk.FullName (Join-Path $out "NameSinger-$OutName-debug-arm64.apk") -Force
+$h = (Get-FileHash (Join-Path $out "NameSinger-$OutName-debug-arm64.apk") -Algorithm SHA256).Hash
+Write-Host "== done: $out\NameSinger-$OutName-debug-arm64.apk sha256=$h"
 

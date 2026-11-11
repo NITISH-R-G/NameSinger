@@ -35,6 +35,12 @@ class KillaUiModule : Module() {
       Prop("disabled") { view: KillaButtonView, v: Boolean -> view.disabled = v; view.apply() }
     }
 
+    View(KillaSegmentedView::class) {
+      Events("onSelect")
+      Prop("options") { view: KillaSegmentedView, v: List<String> -> view.options = v; view.apply() }
+      Prop("selectedIndex") { view: KillaSegmentedView, v: Int -> view.index = v; view.apply() }
+    }
+
     View(KillaFieldView::class) {
       Events("onChangeText", "onSubmit")
       Prop("value") { view: KillaFieldView, v: String -> view.setValue(v) }
@@ -89,11 +95,25 @@ class KillaButtonView(context: Context, appContext: AppContext) : ExpoView(conte
     b.isSingleLine = true
     when (variant) {
       "primary" -> {
-        b.typeface = Skin.script()
-        b.textSize = 24f
+        // Killa's own treatment for skins without script titles (Ui.button): the text face in capitals, tracked out.
+        // Chosen over the gel script so the one action is quick to read.
+        b.setTypeface(Skin.text(), Typeface.BOLD)
+        b.textSize = 18f
+        b.isAllCaps = true
+        b.letterSpacing = 0.1f
         b.setTextColor(Skin.ACCENT)
         b.background = Skin.Plate(true)
         b.setPadding(Ui.dp(c, 30), 0, Ui.dp(c, 30), Ui.dp(c, 2))
+      }
+      "link" -> {
+        // a quiet text action: no plate, accent colour and an underline so it still reads as tappable
+        b.setTypeface(Skin.text(), Typeface.BOLD)
+        b.textSize = 16f
+        b.setTextColor(Skin.ACCENT)
+        b.setShadowLayer(0f, 0f, 0f, 0)
+        b.background = null
+        b.paintFlags = b.paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
+        b.setPadding(Ui.dp(c, 8), 0, Ui.dp(c, 8), 0)
       }
       "chip" -> {
         // Ui.chip: PILL fill, 1dp EDGE stroke, 18dp radius, bold ACCENT text. Selected (not in Killa, which only inserts text):
@@ -154,6 +174,11 @@ class KillaFieldView(context: Context, appContext: AppContext) : ExpoView(contex
     edit.setOnEditorActionListener { _, id, _ ->
       if (id == EditorInfo.IME_ACTION_DONE) { onSubmit(mapOf<String, Any>()); false } else false
     }
+    // The container is focusable ahead of the field, so the keyboard does not open by itself when the screen appears;
+    // tapping the field still focuses it.
+    descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+    isFocusable = true
+    isFocusableInTouchMode = true
     addView(edit, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
   }
 
@@ -200,7 +225,7 @@ class KillaDeckView(context: Context, appContext: AppContext) : ExpoView(context
 
   init {
     Skin.load(context)
-    deck = Deck(context)
+    deck = Deck(context, 1.5f) // the player is the focus of the finished-song screen, so Killa's deck is drawn 1.5x
     addView(deck, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
   }
 
@@ -210,5 +235,53 @@ class KillaDeckView(context: Context, appContext: AppContext) : ExpoView(context
     if (path == current) return
     current = path
     deck.setSource(path, true)
+  }
+}
+
+/** One rounded group of options with the chosen one filled (Killa pill, see Ui.chip), so a choice reads as one control. */
+class KillaSegmentedView(context: Context, appContext: AppContext) : ExpoView(context, appContext) {
+  private val onSelect by EventDispatcher()
+  private val row = android.widget.LinearLayout(context)
+  var options: List<String> = emptyList()
+  var index = 0
+
+  init {
+    Skin.load(context)
+    row.orientation = android.widget.LinearLayout.HORIZONTAL
+    addView(row, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+  }
+
+  override val shouldUseAndroidLayout = true
+
+  fun apply() {
+    val c = context
+    val outer = Ui.box(c, Skin.PILL, 26)
+    outer.setStroke(Ui.dp(c, 1), Skin.EDGE)
+    row.background = outer
+    row.setPadding(Ui.dp(c, 3), Ui.dp(c, 3), Ui.dp(c, 3), Ui.dp(c, 3))
+    row.removeAllViews()
+    options.forEachIndexed { i, label ->
+      val b = Button(c)
+      val on = i == index
+      b.text = label
+      b.isAllCaps = false
+      b.stateListAnimator = null
+      b.setTypeface(Skin.text(), Typeface.BOLD)
+      b.textSize = 15f
+      b.minHeight = 0
+      b.minimumHeight = 0
+      b.setPadding(Ui.dp(c, 6), 0, Ui.dp(c, 6), 0)
+      b.setTextColor(if (on) Skin.HI else Skin.TEXT)
+      b.background = if (on) Ui.box(c, Skin.LO, 22) else null
+      b.contentDescription = if (on) "$label, selected" else label
+      b.setOnClickListener {
+        if (i != index) {
+          index = i
+          apply()
+          onSelect(mapOf("index" to i))
+        }
+      }
+      row.addView(b, android.widget.LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+    }
   }
 }

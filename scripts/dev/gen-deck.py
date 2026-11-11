@@ -17,6 +17,11 @@ on_draw = on_draw.replace(
     "for (int i = BACK; i <= FWD; i++) {\n            bx[i] = w / 2f + (i - 2) * gap;",
 )
 assert "for (int i = BACK; i <= FWD; i++)" in on_draw, "transport loop not adapted"
+# NameSinger: drop the level bars. In Killa they "follow a made-up pulse, not the audio itself", so they are removed here.
+a = on_draw.index("        // level bars on the right")
+b = on_draw.index("        // title and time")
+on_draw = on_draw[:a] + "        float barsL = w - 20 * dp; // the original's decorative level bars were removed\n\n" + on_draw[b:]
+assert "BARS" not in on_draw
 assert "a.playTitle" not in on_draw and "MainActivity" not in on_draw
 
 head = open(os.path.join(os.path.dirname(__file__), "deck-head.txt"), encoding="utf-8").read()

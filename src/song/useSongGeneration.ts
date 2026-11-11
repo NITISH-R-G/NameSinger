@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { loadYueEngine, type YueEngineNative } from '../../modules/yue-engine/src';
-import { parseProgress, type SongProgress } from './progress';
+import { START_PROGRESS, parseProgress, type SongProgress } from './progress';
 import { buildSongRequest, normaliseName, serialiseRequest, type SongStyleId } from './songRequest';
 
 export const MODEL_FILE = 'YuE2-3B-Q5_K_M.gguf';
@@ -29,7 +29,7 @@ export interface SongGenerationState {
   error: string | null;
 }
 
-const IDLE_PROGRESS: SongProgress = { stage: 'starting', fraction: 0, text: 'Getting ready' };
+const IDLE_PROGRESS: SongProgress = START_PROGRESS;
 
 function sleep(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -123,7 +123,7 @@ export function useSongGeneration() {
               s.phase === 'generating'
                 ? {
                     ...s,
-                    progress: progress.fraction >= s.progress.fraction ? progress : s.progress,
+                    progress: progress.step >= s.progress.step ? progress : s.progress,
                     elapsedSeconds: Math.round((Date.now() - started) / 1000),
                   }
                 : s,
@@ -140,7 +140,7 @@ export function useSongGeneration() {
         running.current = false;
         setState({
           phase: 'done',
-          progress: { stage: 'saving', fraction: 1, text: 'Your song is ready' },
+          progress: { stage: 'saving', step: 4, title: 'Your song is ready', detail: null },
           elapsedSeconds: seconds,
           song: { name, style, audioPath: result.audioPath, seconds },
           error: null,
