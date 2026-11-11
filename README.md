@@ -29,14 +29,12 @@ replay it, save it to your Music folder and share it.
   <tr>
     <td align="center"><img src="docs/screenshots/01-create.jpg" width="200" alt="Create screen"><br><sub><b>Create</b><br>name, occasion, style</sub></td>
     <td align="center"><img src="docs/screenshots/02-name-input.jpg" width="200" alt="Typing a name"><br><sub><b>Name input</b></sub></td>
-    <td align="center"><img src="docs/screenshots/03-generating-melody.jpg" width="200" alt="Generation: singing the melody"><br><sub><b>Generating</b><br>step 2 of 4</sub></td>
-    <td align="center"><img src="docs/screenshots/04-generating-render.jpg" width="200" alt="Generation: rendering the voice"><br><sub><b>Generating</b><br>real render count</sub></td>
+    <td align="center"><img src="docs/screenshots/03-generating.jpg" width="200" alt="Generating the song"><br><sub><b>Generating</b><br>real step and elapsed time</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/05-song-ready.jpg" width="200" alt="Completed song"><br><sub><b>Song ready</b></sub></td>
-    <td align="center"><img src="docs/screenshots/06-playback.jpg" width="200" alt="Playback controls"><br><sub><b>Playback</b><br>play, pause, replay</sub></td>
-    <td align="center"><img src="docs/screenshots/07-saved.jpg" width="200" alt="Saved to Music"><br><sub><b>Save and share</b></sub></td>
-    <td></td>
+    <td align="center"><img src="docs/screenshots/04-song-ready.jpg" width="200" alt="Completed song"><br><sub><b>Song ready</b><br>one record, waveform, play</sub></td>
+    <td align="center"><img src="docs/screenshots/05-playback.jpg" width="200" alt="Playing"><br><sub><b>Playback</b><br>pause, replay, seek</sub></td>
+    <td align="center"><img src="docs/screenshots/06-saved.jpg" width="200" alt="Saved to Music"><br><sub><b>Save and share</b><br>icon-only actions</sub></td>
   </tr>
 </table>
 
@@ -113,11 +111,16 @@ Build from source (Windows): see [`scripts/build-gold-apk.ps1`](scripts/build-go
 
 ## Licensing and acknowledgements
 
+> ### ⚠️ Not cleared for commercial use
+> The Apache-2.0 licence below covers **this repository's source code only**. The **YuE2 model weights** the app needs are licensed
+> **CC BY-NC 4.0 (non-commercial)** and are **not** covered by Apache-2.0. Do not treat the complete product as commercially cleared: a company
+> must obtain a licence from the YuE2 authors (or use a commercially licensed model) before offering it commercially.
+
 **Application code vs. model weights are licensed differently.**
 
 | Part | Licence |
 |---|---|
-| NameSinger application source (this repository) | MIT, see [`LICENSE`](LICENSE) |
+| NameSinger application source (this repository) | Apache License 2.0, see [`LICENSE`](LICENSE) and [`NOTICE.md`](NOTICE.md). Source code only |
 | **YuE2 model weights (not in this repository)** | **CC BY-NC 4.0: non-commercial use only.** Individuals may use and share what they generate; a company needs a licence from the model authors. Not cleared for commercial distribution. |
 | Killa YuE UI classes and artwork reused in `modules/killa-ui`; prebuilt engine libraries | Apache-2.0, Copyright 2026 JackKnifeAI. Changes are listed in [`NOTICE.md`](NOTICE.md) |
 | Typefaces Killa Gel Bold Script and Killa Meridian Text | SIL Open Font License 1.1 |
