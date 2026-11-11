@@ -104,3 +104,7 @@ songs/
 **/android/build/
 **/.cxx/
 
+
+# The single example song shown in the README
+!docs/demo/*.mp3
+
