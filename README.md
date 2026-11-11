@@ -23,6 +23,27 @@ replay it, save it to your Music folder and share it.
 > **Prototype.** This is a working technical demonstration on one device. Pronunciation of names is not reliable yet (see [Known limitations](#device-requirements-and-limitations)),
 > and the AI model's licence is non-commercial (see [Licensing](#licensing-and-acknowledgements)).
 
+## Watch the demo
+
+<p align="center">
+  <a href="https://github.com/NITISH-R-G/NameSinger/blob/master/docs/demo/NameSinger-demo-v0.2.0.mp4">
+    <img src="docs/demo/demo-poster.jpg" width="260" alt="Watch the NameSinger demo video (click to play)">
+  </a>
+  &nbsp;&nbsp;
+  <img src="docs/demo/demo-preview.gif" width="200" alt="Short preview: the song being made on the phone">
+  <br>
+  <b><a href="https://github.com/NITISH-R-G/NameSinger/blob/master/docs/demo/NameSinger-demo-v0.2.0.mp4">Watch the demo (78 s, 1080x1920 MP4)</a></b>
+  &middot; <a href="https://github.com/NITISH-R-G/NameSinger/raw/master/docs/demo/NameSinger-demo-v0.2.0.mp4">direct MP4 link</a>
+</p>
+
+This is a real screen recording of the v0.2.0 app running on a Nothing A001 (CMF Phone 2 Pro): typing "Sam", generating the song on the phone's CPU,
+then playing, pausing, seeking, replaying, saving to Music and opening the Android share sheet. What was edited, and nothing else:
+
+* The generation took **3 min 56 s** in real time; the video shows it **18x faster** (the app's own elapsed-time counter and render-pass labels are visible). A few seconds of a system pop-up ("Used for ...") were cut out of that sped-up part.
+* The song you hear is the **MP3 the app generated** in that run (the app's own audio is not captured by screen recording, so the file is laid in time with the on-screen play and pause). The voice-over is synthetic (Windows text-to-speech), added for explanation.
+* The phone's status bar is cropped out, and the contact row of the Android share sheet is blurred for privacy.
+* Pronunciation of names is not reliable yet, and the model weights are non-commercial (see [Licensing](#licensing-and-acknowledgements)).
+
 ## Screenshots
 
 <table>
